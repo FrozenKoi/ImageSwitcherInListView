@@ -15,10 +15,12 @@
         android:maxWidth="80dp"
         android:minWidth="80dp"
         android:minHeight="60dp"
-        android:animateFirstView="false"
-        android:inAnimation="@anim/switch_image_in"
-        android:outAnimation="@anim/switch_image_out"
+        android:animateLayoutChanges="true"
         />
+<!-- android:animateFirstView="false" -->
+<!--         android:inAnimation="@animator/switch_image_prop_in"
+        android:outAnimation="@animator/switch_image_prop_out"
+ -->
 <!--         android:background="#8fff008f" -->
 <!--         android:scaleType="centerInside" -->
 <!--         android:src="@drawable/ic_download_error"  -->
