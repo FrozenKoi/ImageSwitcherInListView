@@ -41,13 +41,6 @@ public class TestListActivity extends ListActivity {
         }
     }
 
-    private final ViewFactory mFactory = new ViewFactory() {
-        @Override
-        public View makeView() {
-            return new ImageView(TestListActivity.this);
-        }
-    };
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,63 +49,8 @@ public class TestListActivity extends ListActivity {
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
                 View newView = super.getView(position, convertView, parent);
-                ImageSwitcher is = (ImageSwitcher)newView.findViewById(R.id.image1); //Cast
                 if (null==convertView) {
-                    is.setFactory(mFactory);
-                    is.setImageResource(mItemIsOn[position] ? R.drawable.item_is_set : R.drawable.item_is_not_set);
-                    Animation inAnim = is.getInAnimation();
-                    if (null != inAnim) {
-                        inAnim.setAnimationListener(new AnimationListener() {
-                            @Override
-                            public void onAnimationStart(Animation animation) {
-                                Log.d(TAG, "onInAnimationStart called");
-                            }
-                            @Override
-                            public void onAnimationRepeat(Animation animation) {}
-                            @Override
-                            public void onAnimationEnd(Animation animation) {
-                                Log.d(TAG, "onInAnimationEnd called");
-                            }
-                        });
-                    }
-                    final Animation outAnim = is.getOutAnimation();
-                    if (null != outAnim) {
-                        outAnim.setAnimationListener(new AnimationListener() {
-                            @Override
-                            public void onAnimationStart(Animation animation) {
-                                Log.d(TAG, "onOutAnimationStart called");
-                            }
-                            @Override
-                            public void onAnimationRepeat(Animation animation) {}
-                            @Override
-                            public void onAnimationEnd(Animation animation) {
-                                Log.d(TAG, "onOutAnimationEnd called");
-                            }
-                        });
-                    }
                     newView.setHasTransientState(true);	//preventing recycle of views doesn't help
-                    LayoutTransition lt = is.getLayoutTransition();
-                    if (null != lt) {
-                        lt.setDuration(20*1000);
-
-                        Animator outAnimator = AnimatorInflater.loadAnimator(TestListActivity.this, R.animator.switch_image_prop_out);
-                        lt.setAnimator(LayoutTransition.DISAPPEARING, outAnimator);
-                        lt.setStartDelay(LayoutTransition.DISAPPEARING, 0);
-                        lt.setStagger(LayoutTransition.DISAPPEARING, 0*1000);
-                        outAnimator.addListener(new AnimLogger("DISAPPEARING "+position));
-
-                        Animator inAnimator = AnimatorInflater.loadAnimator(TestListActivity.this, R.animator.switch_image_prop_in);
-                        lt.setAnimator(LayoutTransition.APPEARING, inAnimator);
-                        lt.setStartDelay(LayoutTransition.APPEARING, 0*1000);
-                        lt.setStagger(LayoutTransition.APPEARING, 0*1000);
-                        inAnimator.addListener(new AnimLogger("APPEARING "+position));
-//                        lt.getAnimator(LayoutTransition.DISAPPEARING).addListener(new AnimLogger("DISAPPEARING "+position));
-//                        lt.getAnimator(LayoutTransition.APPEARING).addListener(new AnimLogger("APPEARING "+position));
-
-                        lt.getAnimator(LayoutTransition.CHANGE_APPEARING).addListener(new AnimLogger("CHANGE_APPEARING "+position));
-                        lt.getAnimator(LayoutTransition.CHANGE_DISAPPEARING).addListener(new AnimLogger("CHANGE_DISAPPEARING "+position));
-                        lt.getAnimator(LayoutTransition.CHANGING).addListener(new AnimLogger("CHANGING "+position));
-                    }
 
                     //setup image rotation click handler
                     final ImageView riv = (ImageView) newView.findViewById(R.id.rotatingImage); //Cast
@@ -167,39 +105,5 @@ public class TestListActivity extends ListActivity {
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
-        mItemIsOn[position] = !mItemIsOn[position];
-        ImageSwitcher is = (ImageSwitcher)v.findViewById(R.id.image1);
-        //start animation
-        is.setImageResource(mItemIsOn[position] ? R.drawable.item_is_set : R.drawable.item_is_not_set);
     }
-
-    static class AnimLogger implements AnimatorListener {
-        private final String mAnimatorName;
-        AnimLogger (String name) {
-            mAnimatorName = name;
-        }
-
-        @Override
-        public void onAnimationStart(Animator animation) {
-            Log.d(TAG, mAnimatorName + " start");
-        }
-
-        @Override
-        public void onAnimationEnd(Animator animation) {
-            Log.d(TAG, mAnimatorName + " end");
-        }
-
-        @Override
-        public void onAnimationCancel(Animator animation) {
-            Log.d(TAG, mAnimatorName + " cancel");
-        }
-
-        @Override
-        public void onAnimationRepeat(Animator animation) {
-            Log.d(TAG, mAnimatorName + " repeat");
-        }
-
-    }
-
-    
 }
