@@ -19,7 +19,7 @@
         />
     <alpha
         android:interpolator="@android:anim/accelerate_interpolator"
-        android:fromAlpha="0"
+        android:fromAlpha="0.25"
         android:toAlpha="1"
         />
 </set>

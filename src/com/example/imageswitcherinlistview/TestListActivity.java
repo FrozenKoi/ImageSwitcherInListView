@@ -13,8 +13,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 import android.view.animation.Animation.AnimationListener;
 import android.widget.ArrayAdapter;
@@ -91,26 +93,51 @@ public class TestListActivity extends ListActivity {
                     newView.setHasTransientState(true);	//preventing recycle of views doesn't help
                     LayoutTransition lt = is.getLayoutTransition();
                     if (null != lt) {
-                        //lt.setDuration(5*1000);
+                        lt.setDuration(20*1000);
 
-//                        Animator outAnimator = AnimatorInflater.loadAnimator(TestListActivity.this, R.animator.switch_image_prop_out);
-//                        lt.setAnimator(LayoutTransition.DISAPPEARING, outAnimator);
-//                        lt.setStartDelay(LayoutTransition.DISAPPEARING, 0);
-//                        lt.setStagger(LayoutTransition.DISAPPEARING, 6*1000);
-//                        outAnimator.addListener(new AnimLogger("DISAPPEARING "+position));
+                        Animator outAnimator = AnimatorInflater.loadAnimator(TestListActivity.this, R.animator.switch_image_prop_out);
+                        lt.setAnimator(LayoutTransition.DISAPPEARING, outAnimator);
+                        lt.setStartDelay(LayoutTransition.DISAPPEARING, 0);
+                        lt.setStagger(LayoutTransition.DISAPPEARING, 0*1000);
+                        outAnimator.addListener(new AnimLogger("DISAPPEARING "+position));
 
-//                        Animator inAnimator = AnimatorInflater.loadAnimator(TestListActivity.this, R.animator.switch_image_prop_in);
-//                        lt.setAnimator(LayoutTransition.APPEARING, inAnimator);
-//                        lt.setStartDelay(LayoutTransition.APPEARING, 0*1000);
-//                        lt.setStagger(LayoutTransition.APPEARING, 6*1000);
-//                        inAnimator.addListener(new AnimLogger("APPEARING "+position));
-                        lt.getAnimator(LayoutTransition.DISAPPEARING).addListener(new AnimLogger("DISAPPEARING "+position));
-                        lt.getAnimator(LayoutTransition.APPEARING).addListener(new AnimLogger("APPEARING "+position));
+                        Animator inAnimator = AnimatorInflater.loadAnimator(TestListActivity.this, R.animator.switch_image_prop_in);
+                        lt.setAnimator(LayoutTransition.APPEARING, inAnimator);
+                        lt.setStartDelay(LayoutTransition.APPEARING, 0*1000);
+                        lt.setStagger(LayoutTransition.APPEARING, 0*1000);
+                        inAnimator.addListener(new AnimLogger("APPEARING "+position));
+//                        lt.getAnimator(LayoutTransition.DISAPPEARING).addListener(new AnimLogger("DISAPPEARING "+position));
+//                        lt.getAnimator(LayoutTransition.APPEARING).addListener(new AnimLogger("APPEARING "+position));
 
                         lt.getAnimator(LayoutTransition.CHANGE_APPEARING).addListener(new AnimLogger("CHANGE_APPEARING "+position));
                         lt.getAnimator(LayoutTransition.CHANGE_DISAPPEARING).addListener(new AnimLogger("CHANGE_DISAPPEARING "+position));
                         lt.getAnimator(LayoutTransition.CHANGING).addListener(new AnimLogger("CHANGING "+position));
                     }
+
+                    //setup image rotation click handler
+                    final ImageView riv = (ImageView) newView.findViewById(R.id.rotatingImage); //Cast
+                    final int finalPosition = position;
+                    riv.setOnClickListener(new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Animation rotAnimation = AnimationUtils.loadAnimation(TestListActivity.this, R.anim.switch_image_in);
+                            rotAnimation.setAnimationListener(new AnimationListener() {
+                                @Override
+                                public void onAnimationStart(Animation animation) {
+                                    Log.d(TAG, "rotAnimation Start "+finalPosition);
+                                }
+                                @Override
+                                public void onAnimationRepeat(Animation animation) {
+                                    Log.d(TAG, "rotAnimation Repeat "+finalPosition);
+                                }
+                                @Override
+                                public void onAnimationEnd(Animation animation) {
+                                    Log.d(TAG, "rotAnimation End "+finalPosition);
+                                }
+                            });
+                            riv.startAnimation(rotAnimation);
+                        }
+                    });
                 }
                 return newView;
             }
@@ -173,4 +200,6 @@ public class TestListActivity extends ListActivity {
         }
 
     }
+
+    
 }

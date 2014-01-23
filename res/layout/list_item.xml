@@ -32,4 +32,10 @@
         android:text="TextView"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
+    <ImageView
+        android:id="@+id/rotatingImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_launcher" />
+
 </LinearLayout>
