@@ -1,6 +1,8 @@
 package com.example.imageswitcherinlistview;
 
-import org.w3c.dom.ls.LSException;
+//import org.w3c.dom.ls.LSException;
+
+import com.frozenkoi.oss.viewswappers.ImageSwapper;
 
 import android.os.Bundle;
 import android.animation.Animator;
@@ -31,13 +33,16 @@ public class TestListActivity extends ListActivity {
     private ArrayAdapter<Integer> mAdapter=null;
     private final Integer mFakeItems[];
     private final boolean mItemIsOn[];
+    private final boolean[] mItemIsSwapped;
 
     public TestListActivity() {
         mFakeItems = new Integer[ITEM_COUNT];
         mItemIsOn = new boolean[ITEM_COUNT];
+        mItemIsSwapped = new boolean[ITEM_COUNT];
         for (int x=0; x<30; ++x) {
             mFakeItems[x] = x;
             mItemIsOn[x] = (x%2==0);
+            mItemIsSwapped[x] = mItemIsOn[x];
         }
     }
 
@@ -138,6 +143,8 @@ public class TestListActivity extends ListActivity {
                             riv.startAnimation(rotAnimation);
                         }
                     });
+//                    final ImageSwapper imgSwapper = (ImageSwapper) newView.findViewById(R.id.image_swapper_1);
+//                    imgSwapper.setOnClickListener(l);
                 }
                 return newView;
             }
@@ -171,6 +178,10 @@ public class TestListActivity extends ListActivity {
         ImageSwitcher is = (ImageSwitcher)v.findViewById(R.id.image1);
         //start animation
         is.setImageResource(mItemIsOn[position] ? R.drawable.item_is_set : R.drawable.item_is_not_set);
+
+        mItemIsSwapped[position] = !mItemIsSwapped[position];
+        ImageSwapper imgSw = (ImageSwapper)v.findViewById(R.id.image_swapper_1);
+        imgSw.setImageResource(mItemIsSwapped[position] ? R.drawable.item_is_set : R.drawable.item_is_not_set);
     }
 
     static class AnimLogger implements AnimatorListener {
